@@ -19,6 +19,7 @@
 
 # ANSWER
 
+library(readr)
 
 ### QUESTION 2 ----- 
 
@@ -36,14 +37,19 @@
 col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 
 # ANSWER
-
+library(here)
+getwd()
+ds1 <- read_table(here("data_A/6191_1.txt"), skip = 7, col_names = c("trial", "speed", "compare", "binary"))
 ### QUESTION 3a. ----- 
 
 # For some reason, the trial numbers for this experiment should start at 100
 # Create a new column in ds1 that takes trial_num and adds 100
 
-# ANSWER
 
+# ANSWER
+library(dplyr)
+ds1 <- ds1 %>%
+  mutate(trial_num = trial + 100)
 
 ### QUESTION 3b. ----- 
 # Write the new data from question 3a to a CSV file in the "data_A_cleaned" folder
@@ -52,13 +58,16 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # Add one commend explaining your naming choice
 
 # ANSWER
-
+dir.create("")
+write_csv(ds1, )
+# I chose snake case because this is what I normally use and I think it is generally the most compatible across programming languages!
 
 ### QUESTION 4 ----- 
 
 # Use list.files() to get a list of the full file names of everything in "data_A"
 # Store it to a variable
 
+dataA_list <- list.files()
 # ANSWER
 
 
@@ -99,4 +108,4 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # There are two sheets of data -- import each one into a new tibble
 
 # ANSWER
-
+library(readxl)
