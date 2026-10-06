@@ -39,7 +39,7 @@ col_names  <-  c("trial_num","speed_actual","speed_response","correct")
 # ANSWER
 library(here)
 getwd()
-ds1 <- read_table(here("data_A/6191_1.txt"), skip = 7, col_names = c("trial", "speed", "compare", "binary"))
+ds1 <- read_tsv(here("data_A/6191_1.txt"), skip = 7, col_names = col_names)
 ### QUESTION 3a. ----- 
 
 # For some reason, the trial numbers for this experiment should start at 100
@@ -49,7 +49,7 @@ ds1 <- read_table(here("data_A/6191_1.txt"), skip = 7, col_names = c("trial", "s
 # ANSWER
 library(dplyr)
 ds1 <- ds1 %>%
-  mutate(trial_num = trial + 100)
+  mutate(trial_num_new = trial_num + 100)
 
 ### QUESTION 3b. ----- 
 # Write the new data from question 3a to a CSV file in the "data_A_cleaned" folder
@@ -58,25 +58,30 @@ ds1 <- ds1 %>%
 # Add one commend explaining your naming choice
 
 # ANSWER
-dir.create("")
-write_csv(ds1, )
-# I chose snake case because this is what I normally use and I think it is generally the most compatible across programming languages!
+dir.create("data_A_cleaned")
+write_csv(ds1, "data_A_cleaned/6191_1_260510.txt" )
+# I chose snake case because this is what I normally use and I think it is generally the most compatible across programming languages.
+# I also used the data format of 260510 since 2026-05-10 uses "-" which could be subtraction in R
 
 ### QUESTION 4 ----- 
 
 # Use list.files() to get a list of the full file names of everything in "data_A"
 # Store it to a variable
 
-dataA_list <- list.files()
 # ANSWER
-
+dataA_list <- list.files(here("data_A"), full.names = TRUE)
 
 ### QUESTION 5 ----- 
 
 # Read all of the files in data_A into a single tibble called ds
 
 # ANSWER
-
+library(purrr)
+ds <- map_dfr(dataA_list, read_tsv, skip = 7, col_names = col_names, col_types = cols(
+                trial_num = col_integer(),
+                speed_actual = col_character(),
+                speed_response = col_character(),
+                correct = col_logical()))
 
 ### QUESTION 6 -----
 
@@ -89,7 +94,9 @@ dataA_list <- list.files()
 # (It should work now, but you'll see a warning because of the erroneous data point)
 
 # ANSWER
-
+ds <- ds %>%
+  mutate(trial_num_new = trial_num + 100)
+# I had to fix the columns to use map_dfr to create the full df for this question, so that step is shown above in Question 5
 
 ### QUESTION 7 -----
 
@@ -99,7 +106,12 @@ dataA_list <- list.files()
 # Re-import the data so that filename becomes a column
 
 # ANSWER
-
+ds <- map_dfr(dataA_list, read_tsv, skip = 7, col_names = col_names, col_types = cols(
+                trial_num = col_integer(),
+                speed_actual = col_character(),
+                speed_response = col_character(),
+                correct = col_logical()),
+              id = "file_name")
 
 ### QUESTION 8 -----
 
@@ -109,3 +121,6 @@ dataA_list <- list.files()
 
 # ANSWER
 library(readxl)
+participant_info <- read_xlsx("data_B/participant_info.xlsx")
+
+# I could only find one sheet of data!
