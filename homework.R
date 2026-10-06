@@ -121,6 +121,6 @@ ds <- map_dfr(dataA_list, read_tsv, skip = 7, col_names = col_names, col_types =
 
 # ANSWER
 library(readxl)
-participant_info <- read_xlsx("data_B/participant_info.xlsx")
+participant <- read_xlsx("data_B/participant_info.xlsx", sheet = "participant")
+test_date <- read_xlsx("data_B/participant_info.xlsx", sheet = "testdate", col_names = FALSE)
 
-# I could only find one sheet of data!
